@@ -11,6 +11,13 @@ import android.widget.Toast;
 
 import com.google.firebase.auth.FirebaseAuth;
 
+import com.google.firebase.messaging.FirebaseMessaging;
+
+// Get the user's ID (replace with your user identification logic)
+
+
+// Subscribe the user to a topic using their ID
+
 public class task_activity extends AppCompatActivity implements View.OnClickListener{
     private Button btnsi,btnsu,btnfp;
     private EditText email,password;
@@ -96,6 +103,12 @@ public class task_activity extends AppCompatActivity implements View.OnClickList
                 .addOnCompleteListener(this, task -> {
                     if (task.isSuccessful()) {
                         // Sign-in successful
+
+
+                        // Implement a method to hash the email
+
+
+
 
                         Intent intent = new Intent(task_activity.this, student_activity.class);
                         startActivity(intent);

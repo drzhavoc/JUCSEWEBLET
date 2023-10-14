@@ -19,6 +19,7 @@ import com.google.firebase.auth.FirebaseAuthUserCollisionException;
 
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.auth.User;
+//import com.google.firebase.messaging.FirebaseMessaging;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -163,6 +164,8 @@ public class signup_activity extends AppCompatActivity implements View.OnClickLi
                         // Save the userData to Firestore
                         firestore.collection("users").document(userId).set(userData)
                                 .addOnSuccessListener(aVoid -> {
+                                    //FirebaseMessaging.getInstance().subscribeToTopic(userRegNo);
+
                                     Toast.makeText(this, "Registration successful!", Toast.LENGTH_SHORT).show();
                                     Intent intent = new Intent(signup_activity.this, student_activity.class);
                                     startActivity(intent);

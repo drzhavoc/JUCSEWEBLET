@@ -194,8 +194,8 @@ public class filehandler extends AppCompatActivity implements FileAdapter.OnDown
 
     private void downloadFile(String fileName) {
         StorageReference fileRef = storageRef.child("files/" + fileName);
-       String fileExtension = getFileExtension(fileName);
-       String filenameonly = getFileNameWithoutExtension(fileName);
+        String fileExtension = getFileExtension(fileName);
+        String filenameonly = getFileNameWithoutExtension(fileName);
 
         fileRef.getDownloadUrl().addOnSuccessListener(new OnSuccessListener<Uri>() {
             @Override
@@ -246,7 +246,6 @@ public class filehandler extends AppCompatActivity implements FileAdapter.OnDown
     }
 
 
-
     private String getOriginalFileName(Uri uri) {
         String result = null;
         if (uri.getScheme().equals("content")) {
@@ -263,8 +262,7 @@ public class filehandler extends AppCompatActivity implements FileAdapter.OnDown
             result = uri.getLastPathSegment();
         }
         return result;
+
+
     }
-
-
-
 }

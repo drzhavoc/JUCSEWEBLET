@@ -5,6 +5,8 @@ import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
+
+import android.util.Log;
 import android.view.View;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
@@ -23,8 +25,12 @@ import com.google.firebase.firestore.QueryDocumentSnapshot;
 import com.google.firebase.firestore.QuerySnapshot;
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.Objects;
+import com.google.firebase.messaging.FirebaseMessaging;
+import com.google.firebase.messaging.RemoteMessage;
 //import androidx.recyclerview.widget.RecyclerView;
 
 
@@ -56,9 +62,16 @@ public class NoticeActivity extends AppCompatActivity {
         noticeRecyclerView.setLayoutManager(new LinearLayoutManager(this));
         noticeRecyclerView.setAdapter(noticeAdapter);
 
-        ArrayAdapter<CharSequence> adapter = ArrayAdapter.createFromResource(this,R.array.notice_categories, android.R.layout.simple_spinner_item);
+        ArrayAdapter<CharSequence> adapter = ArrayAdapter.createFromResource(this, R.array.notice_categories, android.R.layout.simple_spinner_item);
         adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         categorySpinner.setAdapter(adapter);
+
+        // Subscribe the user to a topic, e.g., their user ID
+        if (currentUser != null) {
+            String userId = currentUser.getUid();
+            FirebaseMessaging.getInstance().subscribeToTopic(userId);
+        }
+
 
         uploadButton.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -92,6 +105,9 @@ public class NoticeActivity extends AppCompatActivity {
                         noticeList.add(notice);
                         noticeAdapter.notifyDataSetChanged();
                         noticeEditText.setText(""); // Clear the input field
+
+                        // Send a notification to all users (subscribers to the topic)
+                        sendNotificationToAllUsers(notice);
                     }
                 })
                 .addOnFailureListener(new OnFailureListener() {
@@ -101,6 +117,34 @@ public class NoticeActivity extends AppCompatActivity {
                     }
                 });
     }
+
+
+
+
+
+    private void sendNotificationToAllUsers(Notice notice) {
+        // Create a data payload for the notice
+        String title = "New Notice Uploaded";
+        String body = "A new notice has been uploaded. Check it out!";
+        String userId = currentUser.getUid(); // Sender's user ID
+
+        // Send the notification to the topic (all users)
+        Map<String, String> data = new HashMap<>();
+        data.put("title", title);
+        data.put("body", body);
+       // FirebaseMessaging.getInstance().subscribeToTopic("juweblet");
+        RemoteMessage message = new RemoteMessage.Builder("juweblet")
+                .setData(data)
+                .build();
+
+        // Log messages to help with debugging
+        Log.d("NotificationDebug", "Sending notification: " + message.getData());
+
+        FirebaseMessaging.getInstance().send(message);
+    }
+
+
+
 
     private void displayAllNotices() {
         CollectionReference noticesRef = db.collection("notices");

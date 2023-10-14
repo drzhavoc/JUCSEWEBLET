@@ -1,5 +1,6 @@
 package com.example.ju_cse_short_circuit;
 
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.cardview.widget.CardView;
 
@@ -7,6 +8,11 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
+
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.Task;
+import com.google.firebase.FirebaseApp;
+import com.google.firebase.messaging.FirebaseMessaging;
 
 public class MainActivity extends AppCompatActivity implements View.OnClickListener{
 
@@ -18,13 +24,36 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
+
         setContentView(R.layout.activity_main);
+
+        FirebaseApp.initializeApp(this);
+
         CV1=(CardView) findViewById(R.id.cv1);
         CV2=(CardView) findViewById(R.id.cv2);
         CV3=(CardView) findViewById(R.id.cv3);
         CV4=(CardView) findViewById(R.id.cv4);
         CV5=(CardView) findViewById(R.id.cv5);
         CV6=(CardView) findViewById(R.id.cv6);
+
+
+
+        FirebaseMessaging.getInstance().subscribeToTopic("juweblet")
+                .addOnCompleteListener(new OnCompleteListener<Void>() {
+                    @Override
+                    public void onComplete(@NonNull Task<Void> task) {
+                        String msg = "Done";
+                        if (!task.isSuccessful()) {
+                            msg = "Failed";
+                        }
+
+                    }
+                });
+
+        String serverKey = "AAAAIzeDjs8:APA91bG4x_jrdITBQpcN6kYIBGsSaezAhblrpJyMcO6ctk7KUvFVUBzW1KhKBpfzfcweAIKqVwkC8K9tpuPxwnVha1EGZFr5XNTd3tSVm0-aCefRL_A7PJhPr0JtTl07UDxE2vzpjVpi";
+
+
 
         CV1.setOnClickListener(this);
         CV2.setOnClickListener(this);

@@ -18,6 +18,8 @@ import com.google.firebase.firestore.QueryDocumentSnapshot;
 
 import java.util.ArrayList;
 
+
+
 public class student_activity extends AppCompatActivity implements View.OnClickListener{
     private Button logout;
     private Button details;
